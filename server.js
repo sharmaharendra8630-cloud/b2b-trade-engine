@@ -131,3 +131,6 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Database-backed B2B Trade Engine SaaS is running on port ${PORT}`);
 });
+app.get('/', (req, res) => {
+    res.send('B2B Trade Engine API is running successfully! 🚀');
+});
