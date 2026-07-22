@@ -7,6 +7,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+
+
 // ==========================================
 // 🗄️ DATABASE SETUP (SQLite)
 // ==========================================
@@ -63,6 +65,11 @@ const verifyApiKey = (req, res, next) => {
         next();
     });
 };
+
+app.get('/', (req, res) => {
+    res.send('B2B Trade Engine API is running successfully! 🚀');
+});
+
 
 // ==========================================
 // API 1: एसेट्स और कीमतें (Protected)
@@ -130,7 +137,4 @@ app.post('/api/v1/engine/pool/settle', verifyApiKey, (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Database-backed B2B Trade Engine SaaS is running on port ${PORT}`);
-});
-app.get('/', (req, res) => {
-    res.send('B2B Trade Engine API is running successfully! 🚀');
 });
