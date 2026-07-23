@@ -2,10 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
 const app = express();
-
 const helmet = require('helmet');          // 👈 नया सिक्योरिटी पैकेज
 const rateLimit = require('express-rate-limit'); // 👈 नया रेट लिमिटर पैकेज
-const app = express();
 
 // ==========================================
 // 🛡️ SECURITY & RATE LIMITING MIDDLEWARE
