@@ -5,6 +5,8 @@ const app = express();
 
 // मिडलवेयर (Middleware)
 app.use(express.json());
+// स्टैटिक फाइल्स (Frontend UI) सर्व करने के लिए
+app.use(express.static('public'));
 app.use(cors());
 
 
