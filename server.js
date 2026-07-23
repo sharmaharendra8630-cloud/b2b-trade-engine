@@ -72,6 +72,42 @@ app.get('/', (req, res) => {
     res.send('B2B Trade Engine API is running successfully! 🚀');
 });
 
+// ==========================================
+// API 3: नया क्लाइंट रजिस्टर करना (Client Registration)
+// ==========================================
+app.post('/api/v1/clients/register', (req, res) => {
+    const { client_name, plan } = req.body;
+
+    if (!client_name) {
+        return res.status(400).json({ 
+            success: false, 
+            message: "Client name is required." 
+        });
+    }
+
+    const apiKey = 'client_secret_' + Math.random().toString(36).substring(2, 10) + Date.now();
+    const clientPlan = plan || 'Basic';
+    const status = 'ACTIVE';
+
+    db.run(`INSERT INTO clients (client_name, api_key, plan, status) VALUES (?, ?, ?, ?)`, 
+        [client_name, apiKey, clientPlan, status], function(err) {
+        if (err) {
+            return res.status(500).json({ success: false, message: "Database error: " + err.message });
+        }
+
+        res.json({
+            success: true,
+            message: "Client registered successfully! Copy your API Key.",
+            clientDetails: {
+                id: this.lastID,
+                client_name: client_name,
+                api_key: apiKey,
+                plan: clientPlan,
+                status: status
+            }
+        });
+    });
+});
 
 // ==========================================
 // API 1: एसेट्स और कीमतें (Protected)
