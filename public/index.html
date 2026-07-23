@@ -1,68 +1,62 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B2B Trade Engine SaaS - Dashboard</title>
+    <title>B2B Trade Engine SaaS Dashboard</title>
     <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen p-6">
+<body class="bg-gray-950 text-gray-100 min-h-screen p-6">
+
     <div class="max-w-4xl mx-auto">
-        <!-- Header -->
-        <header class="mb-8 text-center">
-            <h1 class="text-3xl font-bold text-emerald-400">🚀 B2B Trade Engine SaaS</h1>
-            <p class="text-gray-400 mt-2">Live Client Portal & Dashboard</p>
+        <header class="mb-8 border-b border-gray-800 pb-4">
+            <h1 class="text-3xl font-extrabold text-emerald-400">🚀 B2B Trade Engine SaaS</h1>
+            <p class="text-gray-400 text-sm mt-1">Live Dashboard & API Management Panel</p>
         </header>
-<!-- Section: Register New Client -->
-        <div class="bg-gray-800 p-6 rounded-xl shadow-lg mb-6 border border-gray-700">
+
+        <!-- Section: Register New Client -->
+        <div class="bg-gray-900 p-6 rounded-xl shadow-lg mb-6 border border-gray-800">
             <h2 class="text-xl font-bold text-emerald-400 mb-4">🔑 Register New Client & Get API Key</h2>
             <div class="flex flex-col md:flex-row gap-3 mb-4">
-                <input type="text" id="newClientName" placeholder="Enter Startup / Company Name" class="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-emerald-500">
+                <input type="text" id="newClientName" placeholder="Enter Startup / Company Name" class="flex-1 bg-gray-950 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-emerald-500">
                 <button onclick="registerClient()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-lg font-semibold transition">Generate API Key</button>
             </div>
-            <pre id="registerResult" class="bg-gray-900 p-3 rounded-lg text-emerald-300 text-xs overflow-x-auto border border-gray-700">New client details will appear here...</pre>
+            <pre id="registerResult" class="bg-gray-950 p-3 rounded-lg text-emerald-300 text-xs overflow-x-auto border border-gray-800">New client details will appear here...</pre>
         </div>
-        <!-- API Key Box -->
-        <div class="bg-gray-800 p-5 rounded-xl shadow-lg mb-6 border border-gray-700">
-            <label class="block text-sm font-semibold mb-2 text-gray-300">Enter Your API Key (x-api-key):</label>
-            <div class="flex gap-3">
-                <input type="text" id="apiKeyInput" value="client_secret_xyz123" class="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-emerald-500">
-                <button onclick="saveApiKey()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-lg font-semibold transition">Save Key</button>
+
+        <!-- Section: API Key Configuration -->
+        <div class="bg-gray-900 p-6 rounded-xl shadow-lg mb-6 border border-gray-800">
+            <h2 class="text-xl font-bold text-emerald-400 mb-2">⚙️ Authentication Setup</h2>
+            <p class="text-gray-400 text-sm mb-4">Paste your generated API key below to access protected engine routes.</p>
+            <div class="flex flex-col md:flex-row gap-3">
+                <input type="text" id="apiKeyInput" placeholder="Enter your client_secret_xxx..." class="flex-1 bg-gray-950 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-emerald-500">
+                <button onclick="saveApiKey()" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-lg font-semibold transition">Save Key</button>
             </div>
         </div>
 
-        <!-- Section 1: Live Assets -->
-        <div class="bg-gray-800 p-6 rounded-xl shadow-lg mb-6 border border-gray-700">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-emerald-400">📈 Live Market Assets</h2>
-                <button onclick="fetchAssets()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">Fetch Assets</button>
-            </div>
+        <!-- Section: Live Market Assets -->
+        <div class="bg-gray-900 p-6 rounded-xl shadow-lg mb-6 border border-gray-800">
+            <h2 class="text-xl font-bold text-emerald-400 mb-4">📊 Live Market Assets</h2>
+            <button onclick="fetchAssets()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg font-semibold text-sm mb-4 transition">Fetch Live Assets</button>
             <div id="assetsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <p class="text-gray-400 text-sm col-span-3">Click 'Fetch Assets' to load live data...</p>
+                <p class="text-gray-400 text-sm col-span-3">Click fetch to load live data...</p>
             </div>
         </div>
 
-        <!-- Section 2: Pool Settlement Simulator -->
-        <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700">
+        <!-- Section: Pool Settlement Simulator -->
+        <div class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
             <h2 class="text-xl font-bold text-emerald-400 mb-4">⚖️ Pool Settlement Simulator</h2>
-            <button onclick="runSettlement()" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg text-sm font-semibold transition mb-4">Run Sample Settlement</button>
-            <pre id="settlementResult" class="bg-gray-900 p-4 rounded-lg text-emerald-300 text-sm overflow-x-auto border border-gray-700">Output will appear here...</pre>
+            <button onclick="runSettlement()" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg font-semibold text-sm mb-4 transition">Run Sample Settlement</button>
+            <pre id="settlementResult" class="bg-gray-950 p-4 rounded-lg text-emerald-300 text-xs overflow-x-auto border border-gray-800">Simulation output will appear here...</pre>
         </div>
     </div>
 
     <script>
-        function getApiKey() {
-            return document.getElementById('apiKeyInput').value.trim();
-        }
-
         function saveApiKey() {
             alert('API Key saved for session!');
         }
 
-        // Register New Client
         async function registerClient() {
             const clientName = document.getElementById('newClientName').value.trim();
             const resultBox = document.getElementById('registerResult');
@@ -84,7 +78,6 @@
                 
                 if (data.success) {
                     resultBox.innerText = JSON.stringify(data, null, 4);
-                    // ऑटोमैटिकली जनरेटेड API Key को ऊपर इनपुट बॉक्स में सेट कर देना
                     document.getElementById('apiKeyInput').value = data.clientDetails.api_key;
                 } else {
                     resultBox.innerText = `Error: ${data.message}`;
@@ -93,11 +86,15 @@
                 resultBox.innerText = 'Failed to register client.';
             }
         }
-        // Fetch Live Assets
+
+        function getApiKey() {
+            return document.getElementById('apiKeyInput').value.trim();
+        }
+
         async function fetchAssets() {
             const container = document.getElementById('assetsContainer');
             container.innerHTML = '<p class="text-gray-400 text-sm col-span-3">Loading assets...</p>';
-            
+
             try {
                 const response = await fetch('/api/v1/engine/assets', {
                     headers: { 'x-api-key': getApiKey() }
@@ -107,36 +104,32 @@
                 if (data.success) {
                     container.innerHTML = '';
                     data.assets.forEach(asset => {
-                        const trendColor = asset.trend === 'UP' ? 'text-green-400' : 'text-red-400';
                         container.innerHTML += `
-                            <div class="bg-gray-900 p-4 rounded-lg border border-gray-700">
-                                <h3 class="font-bold text-lg text-white">${asset.name}</h3>
-                                <p class="text-2xl font-semibold mt-2 text-emerald-300">$${asset.currentPrice}</p>
-                                <p class="text-sm mt-1 font-bold ${trendColor}">Trend: ${asset.trend}</p>
+                            <div class="bg-gray-950 p-4 rounded-lg border border-gray-800">
+                                <h3 class="font-bold text-white">${asset.name}</h3>
+                                <p class="text-2xl font-extrabold text-emerald-400 my-2">$${asset.currentPrice}</p>
+                                <p class="text-xs font-semibold ${asset.trend === 'UP' ? 'text-emerald-500' : 'text-red-500'}">Trend: ${asset.trend}</p>
                             </div>
                         `;
                     });
                 } else {
-                    container.innerHTML = `<p class="text-red-400 col-span-3">Error: ${data.message}</p>`;
+                    container.innerHTML = `<p class="text-red-400 text-sm col-span-3">Error: ${data.message}</p>`;
                 }
             } catch (err) {
-                container.innerHTML = `<p class="text-red-400 col-span-3">Failed to connect to server.</p>`;
+                container.innerHTML = '<p class="text-red-400 text-sm col-span-3">Failed to connect to server.</p>';
             }
         }
 
-        // Run Pool Settlement
         async function runSettlement() {
             const resultBox = document.getElementById('settlementResult');
-            resultBox.innerText = 'Processing settlement...';
+            resultBox.innerText = 'Running settlement simulation...';
 
-            const sampleTrades = {
-                trades: [
-                    { userId: "user1", amount: 100, status: "LOST" },
-                    { userId: "user2", amount: 200, status: "LOST" },
-                    { userId: "user3", amount: 150, status: "WON" },
-                    { userId: "user4", amount: 250, status: "WON" }
-                ]
-            };
+            const sampleTrades = [
+                { tradeId: "t1", userId: "user1", amount: 100, status: "LOST" },
+                { tradeId: "t2", userId: "user2", amount: 200, status: "LOST" },
+                { tradeId: "t3", userId: "user3", amount: 150, status: "WON" },
+                { tradeId: "t4", userId: "user4", amount: 150, status: "WON" }
+            ];
 
             try {
                 const response = await fetch('/api/v1/engine/pool/settle', {
@@ -145,15 +138,19 @@
                         'Content-Type': 'application/json',
                         'x-api-key': getApiKey() 
                     },
-                    body: JSON.stringify(sampleTrades)
+                    body: JSON.stringify({ trades: sampleTrades })
                 });
                 const data = await response.json();
-                resultBox.innerText = JSON.stringify(data, null, 4);
+
+                if (data.success) {
+                    resultBox.innerText = JSON.stringify(data, null, 4);
+                } else {
+                    resultBox.innerText = `Error: ${data.message}`;
+                }
             } catch (err) {
-                resultBox.innerText = 'Failed to process settlement.';
-                        }
+                resultBox.innerText = 'Failed to execute settlement.';
+            }
         }
     </script>
 </body>
 </html>
-
