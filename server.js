@@ -2,6 +2,35 @@ const express = require('express');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
 const app = express();
+const express = require('express');
+const cors = require('cors');
+const sqlite3 = require('sqlite3').verbose();
+const helmet = require('helmet');          // 👈 नया सिक्योरिटी पैकेज
+const rateLimit = require('express-rate-limit'); // 👈 नया रेट लिमिटर पैकेज
+const app = express();
+
+// ==========================================
+// 🛡️ SECURITY & RATE LIMITING MIDDLEWARE
+// ==========================================
+app.use(helmet()); // सुरक्षा के लिए HTTP हेडर सेट करना
+
+// रेट लिमिटर (एक आईपी से 15 मिनट में अधिकतम 100 रिक्वेस्ट)
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, 
+    max: 100, 
+    message: {
+        success: false,
+        message: "Too many requests from this IP, please try again after 15 minutes."
+    }
+});
+
+// इसे सभी /api/ रूट्स पर लागू करना
+app.use('/api/', limiter);
+
+// मिडलवेयर (Middleware)
+app.use(express.json());
+app.use(cors());
+app.use(express.static('public')); // स्टैटिक फोल्डर (डैशबोर्ड)
 
 // मिडलवेयर (Middleware)
 app.use(express.json());
