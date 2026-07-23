@@ -9,7 +9,24 @@ app.use(express.json());
 app.use(express.static('public'));
 app.use(cors());
 
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
+// 1. Helmet सिक्योरिटी हेडर जोड़ना
+app.use(helmet());
+
+// 2. Rate Limiter सेट करना (ताकि कोई एक आईपी से बार-बार स्पैम रिक्वेस्ट न भेज सके)
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 मिनट का समय
+    max: 100, // एक आईपी से 15 मिनट में अधिकतम 100 रिक्वेस्ट
+    message: {
+        success: false,
+        message: "Too many requests from this IP, please try again after 15 minutes."
+    }
+});
+
+// इसे सभी API रूट्स पर लागू करना
+app.use('/api/', limiter);
 
 // ==========================================
 // 🗄️ DATABASE SETUP (SQLite)
