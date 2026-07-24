@@ -6,9 +6,7 @@ const rateLimit = require('express-rate-limit');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-// server.js में राउट को इम्पोर्ट करना
-const tradeRoutes = './routes/trade'; // (मान लीजिए आपकी फाइल का नाम trade.js है)
-app.use('/api/v1/engine', require(tradeRoutes));
+
 // Security & Rate Limiting
 app.use(helmet());
 const limiter = rateLimit({
@@ -129,7 +127,6 @@ app.post('/api/v1/engine/pool/settle', verifyApiKey, (req, res) => {
         distributedWinners: winnersList
     });
 });
-
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
