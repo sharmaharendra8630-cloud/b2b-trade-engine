@@ -4,152 +4,201 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B2B Trade Engine SaaS Dashboard</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-950 text-gray-100 min-h-screen p-6">
+<body class="bg-gray-50 font-sans antialiased">
 
-    <div class="max-w-4xl mx-auto">
-        <header class="mb-8 border-b border-gray-800 pb-4">
-            <h1 class="text-3xl font-extrabold text-emerald-400">🚀 B2B Trade Engine </h1>
-            <p class="text-gray-400 text-sm mt-1">Live Dashboard & API Management Panel</p>
-        </header>
-
-        <!-- Section: Register New Client -->
-        <div class="bg-gray-900 p-6 rounded-xl shadow-lg mb-6 border border-gray-800">
-            <h2 class="text-xl font-bold text-emerald-400 mb-4">🔑 Register New Client & Get API Key</h2>
-            <div class="flex flex-col md:flex-row gap-3 mb-4">
-                <input type="text" id="newClientName" placeholder="Enter Startup / Company Name" class="flex-1 bg-gray-950 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-emerald-500">
-                <button onclick="registerClient()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-lg font-semibold transition">Generate API Key</button>
-            </div>
-            <pre id="registerResult" class="bg-gray-950 p-3 rounded-lg text-emerald-300 text-xs overflow-x-auto border border-gray-800">New client details will appear here...</pre>
-        </div>
-
-        <!-- Section: API Key Configuration -->
-        <div class="bg-gray-900 p-6 rounded-xl shadow-lg mb-6 border border-gray-800">
-            <h2 class="text-xl font-bold text-emerald-400 mb-2">⚙️ Authentication Setup</h2>
-            <p class="text-gray-400 text-sm mb-4">Paste your generated API key below to access protected engine routes.</p>
-            <div class="flex flex-col md:flex-row gap-3">
-                <input type="text" id="apiKeyInput" placeholder="Enter your client_secret_xxx..." class="flex-1 bg-gray-950 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-emerald-500">
-                <button onclick="saveApiKey()" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-lg font-semibold transition">Save Key</button>
+    <!-- Navbar -->
+    <nav class="bg-indigo-600 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-white text-xl font-bold tracking-wider">🚀 B2B Trade Engine SaaS</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="text-indigo-200 text-sm">Production Ready</span>
+                </div>
             </div>
         </div>
+    </nav>
 
-        <!-- Section: Live Market Assets -->
-        <div class="bg-gray-900 p-6 rounded-xl shadow-lg mb-6 border border-gray-800">
-            <h2 class="text-xl font-bold text-emerald-400 mb-4">📊 Live Market Assets</h2>
-            <button onclick="fetchAssets()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg font-semibold text-sm mb-4 transition">Fetch Live Assets</button>
-            <div id="assetsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <p class="text-gray-400 text-sm col-span-3">Click fetch to load live data...</p>
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white overflow-hidden shadow rounded-lg p-5 border-l-4 border-indigo-500">
+                <dt class="text-sm font-medium text-gray-500 truncate">Total Trades</dt>
+                <dd id="total-trades" class="mt-1 text-3xl font-semibold text-gray-900">0</dd>
+            </div>
+            <div class="bg-white overflow-hidden shadow rounded-lg p-5 border-l-4 border-green-500">
+                <dt class="text-sm font-medium text-gray-500 truncate">Total Trade Value</dt>
+                <dd id="total-value" class="mt-1 text-3xl font-semibold text-gray-900">$0.00</dd>
+            </div>
+            <div class="bg-white overflow-hidden shadow rounded-lg p-5 border-l-4 border-yellow-500">
+                <dt class="text-sm font-medium text-gray-500 truncate">System Status</dt>
+                <dd class="mt-1 text-3xl font-semibold text-green-600">Online</dd>
             </div>
         </div>
 
-        <!-- Section: Pool Settlement Simulator -->
-        <div class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
-            <h2 class="text-xl font-bold text-emerald-400 mb-4">⚖️ Pool Settlement Simulator</h2>
-            <button onclick="runSettlement()" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg font-semibold text-sm mb-4 transition">Run Sample Settlement</button>
-            <pre id="settlementResult" class="bg-gray-950 p-4 rounded-lg text-emerald-300 text-xs overflow-x-auto border border-gray-800">Simulation output will appear here...</pre>
+        <!-- Grid: Form & Table -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Add Trade Form -->
+            <div class="bg-white shadow rounded-lg p-6 lg:col-span-1">
+                <h2 class="text-lg font-medium text-gray-900 mb-4">Create New Trade</h2>
+                <form id="trade-form" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Buyer Company</label>
+                        <input type="text" id="buyer" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2" placeholder="e.g. Acme Corp">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Seller Company</label>
+                        <input type="text" id="seller" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2" placeholder="e.g. Global Supplies">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Product / Service</label>
+                        <input type="text" id="product" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2" placeholder="e.g. Industrial Steel Coils">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Amount ($)</label>
+                        <input type="number" step="0.01" id="amount" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2" placeholder="e.g. 50000">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Status</label>
+                        <select id="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2">
+                            <option value="Pending">Pending</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 text-white font-medium py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-150">
+                        Submit Trade
+                    </button>
+                </form>
+            </div>
+
+            <!-- Trades Table -->
+            <div class="bg-white shadow rounded-lg p-6 lg:col-span-2 overflow-hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-medium text-gray-900">Recent Trades Ledger</h2>
+                    <button onclick="fetchTrades()" class="text-sm text-indigo-600 hover:text-indigo-900 font-medium">Refresh</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Buyer / Seller</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trades-table-body" class="bg-white divide-y divide-gray-200">
+                            <!-- Dynamic rows loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
 
+    <!-- JavaScript for Data Fetching & Submission -->
     <script>
-        function saveApiKey() {
-            alert('API Key saved for session!');
+        const API_URL = '/api/trades';
+
+        async function fetchTrades() {
+            try {
+                const response = await fetch(API_URL);
+                const result = await response.json();
+                if (result.message === 'success') {
+                    renderTrades(result.data);
+                }
+            } catch (error) {
+                console.error('Error fetching trades:', error);
+            }
         }
 
-        async function registerClient() {
-            const clientName = document.getElementById('newClientName').value.trim();
-            const resultBox = document.getElementById('registerResult');
+        function renderTrades(trades) {
+            const tbody = document.getElementById('trades-table-body');
+            const totalTradesEl = document.getElementById('total-trades');
+            const totalValueEl = document.getElementById('total-value');
+            
+            tbody.innerHTML = '';
+            let totalValue = 0;
 
-            if (!clientName) {
-                alert('Please enter a company or client name.');
-                return;
+            if (trades.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No trades recorded yet.</td></tr>`;
             }
 
-            resultBox.innerText = 'Registering new client...';
-
-            try {
-                const response = await fetch('/api/v1/clients/register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ client_name: clientName, plan: "Growth" })
-                });
-                const data = await response.json();
+            trades.forEach(trade => {
+                totalValue += parseFloat(trade.amount);
                 
-                if (data.success) {
-                    resultBox.innerText = JSON.stringify(data, null, 4);
-                    document.getElementById('apiKeyInput').value = data.clientDetails.api_key;
+                let statusBadge = '';
+                if (trade.status === 'Completed') {
+                    statusBadge = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Completed</span>';
+                } else if (trade.status === 'Cancelled') {
+                    statusBadge = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Cancelled</span>';
                 } else {
-                    resultBox.innerText = `Error: ${data.message}`;
+                    statusBadge = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>';
                 }
-            } catch (err) {
-                resultBox.innerText = 'Failed to register client.';
-            }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#${trade.id}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <div class="font-medium text-gray-900">${trade.buyer}</div>
+                        <div class="text-xs text-gray-400">to ${trade.seller}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${trade.product}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">$${parseFloat(trade.amount).toLocaleString()}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">${statusBadge}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            totalTradesEl.innerText = trades.length;
+            totalValueEl.innerText = '$' + totalValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
         }
 
-        function getApiKey() {
-            return document.getElementById('apiKeyInput').value.trim();
-        }
-
-        async function fetchAssets() {
-            const container = document.getElementById('assetsContainer');
-            container.innerHTML = '<p class="text-gray-400 text-sm col-span-3">Loading assets...</p>';
+        document.getElementById('trade-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const newTrade = {
+                buyer: document.getElementById('buyer').value,
+                seller: document.getElementById('seller').value,
+                product: document.getElementById('product').value,
+                amount: parseFloat(document.getElementById('amount').value),
+                status: document.getElementById('status').value
+            };
 
             try {
-                const response = await fetch('/api/v1/engine/assets', {
-                    headers: { 'x-api-key': getApiKey() }
-                });
-                const data = await response.json();
-
-                if (data.success) {
-                    container.innerHTML = '';
-                    data.assets.forEach(asset => {
-                        container.innerHTML += `
-                            <div class="bg-gray-950 p-4 rounded-lg border border-gray-800">
-                                <h3 class="font-bold text-white">${asset.name}</h3>
-                                <p class="text-2xl font-extrabold text-emerald-400 my-2">$${asset.currentPrice}</p>
-                                <p class="text-xs font-semibold ${asset.trend === 'UP' ? 'text-emerald-500' : 'text-red-500'}">Trend: ${asset.trend}</p>
-                            </div>
-                        `;
-                    });
-                } else {
-                    container.innerHTML = `<p class="text-red-400 text-sm col-span-3">Error: ${data.message}</p>`;
-                }
-            } catch (err) {
-                container.innerHTML = '<p class="text-red-400 text-sm col-span-3">Failed to connect to server.</p>';
-            }
-        }
-
-        async function runSettlement() {
-            const resultBox = document.getElementById('settlementResult');
-            resultBox.innerText = 'Running settlement simulation...';
-
-            const sampleTrades = [
-                { tradeId: "t1", userId: "user1", amount: 100, status: "LOST" },
-                { tradeId: "t2", userId: "user2", amount: 200, status: "LOST" },
-                { tradeId: "t3", userId: "user3", amount: 150, status: "WON" },
-                { tradeId: "t4", userId: "user4", amount: 150, status: "WON" }
-            ];
-
-            try {
-                const response = await fetch('/api/v1/engine/pool/settle', {
+                const response = await fetch(API_URL, {
                     method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'x-api-key': getApiKey() 
+                    headers: {
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ trades: sampleTrades })
+                    body: JSON.stringify(newTrade)
                 });
-                const data = await response.json();
 
-                if (data.success) {
-                    resultBox.innerText = JSON.stringify(data, null, 4);
+                const result = await response.json();
+                if (response.ok) {
+                    document.getElementById('trade-form').reset();
+                    fetchTrades();
                 } else {
-                    resultBox.innerText = `Error: ${data.message}`;
+                    alert('Error: ' + result.error);
                 }
-            } catch (err) {
-                resultBox.innerText = 'Failed to execute settlement.';
+            } catch (error) {
+                console.error('Error submitting trade:', error);
+                alert('Failed to submit trade.');
             }
-        }
+        });
+
+        // Initial fetch on load
+        fetchTrades();
     </script>
 </body>
 </html>
